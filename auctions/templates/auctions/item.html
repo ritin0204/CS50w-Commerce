@@ -1,0 +1,97 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+           {% if winner %}
+           <div class="alert alert-success" role="alert">
+               Congratulations ! {{winner}} won the Bid
+           </div>
+            {% endif %}
+           {% if messaget %}
+           <div class="alert alert-warning" role="alert">
+                {{messaget}}
+           </div>
+            {% endif %}
+            <div class="card mb-3">
+             <div class="row no-gutters">
+             <div class="col-md-4">
+             <img src="{{ item.image_url}}" class="card-img" alt="Product Image">
+             </div>
+            <div class="col-md-8">
+            <div class="card-body">
+             {% if close %}
+            <div class="float-right">
+                     <form action="{% url 'closelisting' %}" method="post">
+                          {% csrf_token %}
+                        <input type="hidden" value={{item.id}} name = "item_id">
+             
+                        <input class="btn btn-danger" type="submit" value={{close}}>
+                     </form>
+            </div>
+            {% endif %}
+            <h4 class="card-title">{{ item.title }}</h4>
+            <h5 class="card-title"><b>Created by </b>{{ item.user_id }}</h5>
+            <p class="card-text">Description : {{item.description}}</p>
+            {% if price %}
+                <h4 class="text-success">Current Bid :- ${{price}}</h4>
+            {% endif %}
+           {% if item.active %}
+              <h4 class="text-primary">${{item.first_bid}}</h4>
+           {% else %}
+              <p class= "text-light bg-danger" style="text-align : center">Closed</p>
+           {% endif %}
+            <form action="{% url 'watchlistwork' %}" method="post">
+                  {% csrf_token %}
+                  <input type="hidden" value={{item.id}} name = "item_id">
+             
+                  <input class="btn btn-secondary" type="submit" value="{{message}}">
+              </form>
+
+            <div>
+                  <form action="{% url 'bidpost' %}" method="post">
+                         {% csrf_token %}
+                         <div class="form-group">
+                         <small id="emailHelp" class="form-text text-muted">Place Your bid</small>
+                         <input class="form-control" type="text" name="bid" placeholder="Enter in decimal Like : 20.00">
+                         <input type="hidden" value={{item.id}} name = "item_id">
+                          </div>
+                         <input class="btn btn-primary" type="submit" value="Place Bid">
+                  </form>
+ 
+            <div class="float-right">
+                    <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted">{{item.created_at}}</small>
+            </div>
+            </div>
+           </div>
+           </div>
+           </div>
+           </div>
+
+
+      <div class="col-md-12">
+         <div class="card mb-4 box-shadow">
+         <lable><h4 class="align-center">Comments</h4></lable>
+          <form action="{% url 'comment' %}" method="post">
+            {% csrf_token %}
+               <div class="form-group">
+               <textarea class="form-control" id="exampleFormControlTextarea1" rows="2" placeholder="Comment Something here...." name = "comment"></textarea>
+               <input type="hidden" value={{item.id}} name = "item_id">
+               <input class="btn btn-primary btn-sm" type="submit" value="Post Comment">
+            </div>
+            </form>
+            {% for comment in comments %}
+             <ul class="list-group list-group-flush">
+               <li class="list-group-item">
+               <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-dark">{{comment.user_id}}</small>
+                  </div>
+                <p>{{comment.comment}}</p>
+               </li>
+             </ul>
+            {% empty %}
+                <p>No Comments Yet</p>
+            {% endfor %}
+         </div>
+      </div>
+
+{% endblock %}

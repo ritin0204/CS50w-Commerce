@@ -1,0 +1,51 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+
+<div class="card card-image" style = "background-image : url(https://wallpaper-mania.com/wp-content/uploads/2018/09/High_resolution_wallpaper_background_ID_77700385735.jpg);background-size: auto;background-repeat: no-repeat;">
+      <div class="text-white text-center rgba-stylish-strong py-5 px-4">
+        <div class="py-5">
+         {% if user.is_authenticated %}
+                <h2 class="jumbotron-heading"><strong>Welcome {{ user.username }}</strong></h2>
+                <p class="lead text-white">This site is one of Cs50w project</p>
+            {% else %}
+               <p>
+            <a href="{% url 'login' %}" class="btn btn-primary my-2">Login Here</a>
+            <a href="{% url 'register' %}" class="btn btn-secondary my-2">Create Accout</a>
+                </p>
+            {% endif %}
+          </div>
+      </div>
+    </div>
+
+
+    <h4 style="text-align : center" class="text-white">Active Listings</h4>
+     <div style="border-top : 1px solid white;"><div>
+    <div class="album py-5">
+        <div class="container">
+        <div class="row">
+       {% for item in listings %}
+
+            <div class="col-md-4">
+              <div class="card mb-4 box-shadow">
+                <img class="card-img-top" src="{{ item.image_url}}" alt="Card image cap">
+                <div class="card-body">
+                  <h4>{{ item.title }}</h4>
+                  <p class="card-text">Category : {{item.category}}</p>
+                  <p class="text-primary">Starting bid :- ${{item.first_bid}}</p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                      <p><a class="btn btn-warning" href={{item.id}}>View details &raquo;</a></p>
+                    </div>
+                    <small class="text-muted">{{item.created_at}}</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+        
+        {% endfor %}
+        </div>
+        </div>
+  </div>
+{% endblock %}
